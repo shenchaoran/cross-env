@@ -1,5 +1,6 @@
 const os = require('os')
 const {spawn} = require('cross-spawn')
+const compare = require('node-version-compare')
 const commandConvert = require('./command')
 const varValueConvert = require('./variable')
 
@@ -10,15 +11,17 @@ const envSetterRegex = /(\w+)=('(.*)'|"(.*)"|(.*))/
 function crossEnv(args, options = {}) {
   const [envSetters, command, commandArgs] = parseCommand(args)
   // eslint-disable-next-line prefer-const
-  let {os: targetOS, ...otherEnvSetters} = envSetters
+  let {os: targetOS, minVersion, ...otherEnvSetters} = envSetters
   if (targetOS) {
     if (
       !targetOS
         .split(',')
         .map(v => v.trim())
-        .includes(os.type())
-    )
+        .includes(os.type()) ||
+      compare(minVersion, process.version.replace('v', '')) > 0
+    ) {
       otherEnvSetters = {}
+    }
   }
   const env = getEnvVars(otherEnvSetters)
 

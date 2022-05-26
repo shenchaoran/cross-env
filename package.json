@@ -1,6 +1,6 @@
 {
   "name": "cross-env-os",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Run scripts that set and use environment variables across platforms",
   "main": "src/index.js",
   "bin": {
@@ -31,7 +31,8 @@
   "author": "Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)",
   "license": "MIT",
   "dependencies": {
-    "cross-spawn": "^7.0.1"
+    "cross-spawn": "^7.0.1",
+    "node-version-compare": "^1.0.3"
   },
   "devDependencies": {
     "kcd-scripts": "^5.5.0"
