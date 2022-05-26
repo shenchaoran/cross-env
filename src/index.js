@@ -1,3 +1,4 @@
+const os = require('os')
 const {spawn} = require('cross-spawn')
 const commandConvert = require('./command')
 const varValueConvert = require('./variable')
@@ -8,7 +9,19 @@ const envSetterRegex = /(\w+)=('(.*)'|"(.*)"|(.*))/
 
 function crossEnv(args, options = {}) {
   const [envSetters, command, commandArgs] = parseCommand(args)
-  const env = getEnvVars(envSetters)
+  // eslint-disable-next-line prefer-const
+  let {os: targetOS, ...otherEnvSetters} = envSetters
+  if (targetOS) {
+    if (
+      !targetOS
+        .split(',')
+        .map(v => v.trim())
+        .includes(os.type())
+    )
+      otherEnvSetters = {}
+  }
+  const env = getEnvVars(otherEnvSetters)
+
   if (command) {
     const proc = spawn(
       // run `path.normalize` for command(on windows)
